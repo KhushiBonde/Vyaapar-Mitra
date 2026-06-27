@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* Design Tokens */
+@theme {
+  --color-sage-50:   #f0f7f4;
+  --color-sage-100:  #d6ede6;
+  --color-sage-200:  #aed9cc;
+  --color-sage-300:  #7bbfb0;
+  --color-sage-400:  #52a596;
+  --color-sage-500:  #3d9080;
+  --color-sage-600:  #2e7a6c;
+  --color-sage-700:  #226358;
+  --color-sage-800:  #1a4e45;
+  --color-sage-900:  #123b34;
+
+  --color-blush-50:  #fdf2f2;
+  --color-blush-100: #fce4e3;
+  --color-blush-200: #f9c8c6;
+  --color-blush-300: #f4a5a1;
+  --color-blush-400: #ec7e79;
+  --color-blush-500: #e05a54;
+  --color-blush-600: #cc3d37;
+
+  --color-cream-50:  #fffdf9;
+  --color-cream-100: #fdf8f0;
+  --color-cream-200: #f8edda;
+  --color-cream-300: #f2e0c1;
+
+  --color-parchment-100: #faf4e8;
+  --color-parchment-200: #f2e8d5;
+  --color-parchment-300: #e8d9bc;
+
+  --color-marigold-300: #fce083;
+  --color-marigold-400: #f8c832;
+  --color-marigold-500: #e6b020;
+
+  --color-navy-800: #1e2d3d;
+  --color-navy-900: #111a26;
+
+  --color-brand-50:  #f0f7f4;
+  --color-brand-100: #d6ede6;
+  --color-brand-200: #aed9cc;
+  --color-brand-300: #7bbfb0;
+  --color-brand-400: #52a596;
+  --color-brand-500: #3d9080;
+  --color-brand-600: #2e7a6c;
+  --color-brand-700: #226358;
+  --color-brand-800: #1a4e45;
+  --color-brand-900: #123b34;
+
+  --color-accent-50:  #fdf2f2;
+  --color-accent-100: #fce4e3;
+  --color-accent-500: #e05a54;
+  --color-accent-600: #cc3d37;
+  --color-accent-700: #b03330;
+
+  --color-neutral-50:  #fdf8f0;
+  --color-neutral-100: #f2e8d5;
+  --color-neutral-200: #e8d9bc;
+  --color-neutral-300: #d4c5a9;
+  --color-neutral-400: #b8a88a;
+  --color-neutral-500: #8a7560;
+  --color-neutral-600: #6b5c48;
+  --color-neutral-700: #4e4233;
+  --color-neutral-800: #342c21;
+  --color-neutral-900: #1e1a13;
+
+  --color-success-500: #3aaa7e;
+  --color-success-100: #d0f0e3;
+  --color-success-600: #2d8a66;
+  --color-warning-500: #e6a020;
+  --color-warning-100: #fef0c7;
+  --color-danger-500:  #e05a54;
+  --color-danger-100:  #fce4e3;
+  --color-danger-200:  #f9c8c6;
+  --color-danger-600:  #cc3d37;
+  --color-danger-700:  #b03330;
+  --color-danger-800:  #8a2620;
+  --color-danger-50:   #fdf2f2;
+  --color-info-500:    #4a90c4;
+  --color-info-100:    #d6eaf5;
+
+  --font-sans:    'Inter', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  --shadow-paper:       2px 4px 12px rgba(30,45,61,0.08), 0 1px 3px rgba(30,45,61,0.05);
+  --shadow-paper-lift:  4px 8px 24px rgba(30,45,61,0.13), 0 2px 6px rgba(30,45,61,0.07);
+  --shadow-paper-float: 6px 12px 36px rgba(30,45,61,0.16), 0 3px 8px rgba(30,45,61,0.08);
+  --shadow-card:        var(--shadow-paper);
+  --shadow-card-hover:  var(--shadow-paper-lift);
+  --shadow-modal:       8px 24px 64px rgba(30,45,61,0.22);
+
+  --radius-card: 0.25rem;
+  --radius-pill: 999px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1e2d3d;
+  background-color: #fdf8f0;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1e2d3d;
+}
+
+.font-display { font-family: 'Playfair Display', Georgia, serif; }
+.font-sans-ui { font-family: 'Inter', system-ui, sans-serif; }
+
+.card {
+  background: #faf4e8;
+  border-radius: 4px;
+  box-shadow: var(--shadow-paper);
+  border: 1px solid #e8d9bc;
+  position: relative;
+}
+.card-white {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: var(--shadow-paper);
+  border: 1px solid #e8d9bc;
+}
+.card-hover { transition: box-shadow 0.25s ease, transform 0.25s ease; }
+.card-hover:hover {
+  box-shadow: var(--shadow-paper-lift);
+  transform: translateY(-2px);
+}
+
+.tilt-1    { transform: rotate(1.2deg);  }
+.tilt-neg1 { transform: rotate(-1.1deg); }
+.tilt-1:hover, .tilt-neg1:hover {
+  transform: rotate(0deg) translateY(-3px);
+  transition: transform 0.3s ease;
+}
+
+.gradient-brand    { background: linear-gradient(135deg, #3d9080 0%, #2e7a6c 50%, #226358 100%); }
+.gradient-sage     { background: linear-gradient(135deg, #7bbfb0 0%, #52a596 100%); }
+.gradient-blush    { background: linear-gradient(135deg, #f4a5a1 0%, #e05a54 100%); }
+.gradient-marigold { background: linear-gradient(135deg, #fce083 0%, #f8c832 100%); }
+.gradient-hero     { background: linear-gradient(160deg, #aed9cc 0%, #d6ede6 40%, #fdf8f0 100%); }
+.gradient-parchment{ background: linear-gradient(160deg, #faf4e8 0%, #f2e8d5 100%); }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  padding: 0.18rem 0.6rem; border-radius: 999px;
+  font-size: 0.7rem; font-weight: 600; line-height: 1.4;
+  font-family: 'Inter', sans-serif; letter-spacing: 0.01em;
+}
+.badge-success { background: #d0f0e3; color: #1a6648; border: 1px solid #a5dfc5; }
+.badge-warning { background: #fef0c7; color: #7a4f10; border: 1px solid #f8c832; }
+.badge-danger  { background: #fce4e3; color: #b03330; border: 1px solid #f9c8c6; }
+.badge-info    { background: #d6eaf5; color: #2a6090; border: 1px solid #a8ccdf; }
+.badge-neutral { background: #f2e8d5; color: #6b5c48; border: 1px solid #e8d9bc; }
+.badge-brand   { background: #d6ede6; color: #226358; border: 1px solid #aed9cc; }
+
+.bubble-customer {
+  background: #d6ede6; border: 1px solid #aed9cc;
+  border-radius: 0 14px 14px 14px;
+  max-width: 75%; padding: 10px 14px;
+  font-size: 14px; color: #1a4e45;
+  box-shadow: 2px 3px 8px rgba(30,45,61,0.07);
+}
+.bubble-ai {
+  background: #faf4e8; border: 1px solid #e8d9bc;
+  border-radius: 14px 14px 0 14px;
+  max-width: 75%; padding: 10px 14px;
+  font-size: 14px; color: #342c21;
+  box-shadow: 2px 3px 8px rgba(30,45,61,0.07);
+}
+.bubble-human {
+  background: #fff8e6; border: 1px solid #f8c832;
+  border-radius: 14px 14px 0 14px;
+  max-width: 75%; padding: 10px 14px;
+  font-size: 14px; color: #342c21;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #f2e8d5; }
+::-webkit-scrollbar-thumb { background: #aed9cc; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #7bbfb0; }
+
+:focus-visible { outline: 2px solid #52a596; outline-offset: 2px; }
+
+.transition-base { transition: all 0.22s ease; }
+.sidebar-transition {
+  transition: width 0.3s cubic-bezier(0.4,0,0.2,1),
+              transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: fadeIn 0.35s ease forwards; }
+
+@keyframes float {
+  0%,100% { transform: translateY(0px) rotate(1.5deg); }
+  50%      { transform: translateY(-8px) rotate(1.5deg); }
+}
+.float-anim { animation: float 4s ease-in-out infinite; }
+
+@keyframes float-slow {
+  0%,100% { transform: translateY(0px) rotate(-1deg); }
+  50%      { transform: translateY(-5px) rotate(-1deg); }
+}
+.float-slow { animation: float-slow 6s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f2e8d5 25%, #e8d9bc 50%, #f2e8d5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.25rem;
+}
+
+.pulse-dot::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 50%;
+  background: currentColor;
+  animation: pulse-ring 1.5s ease-out infinite;
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.tooltip { position: relative; }
+.tooltip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: #1e2d3d; color: #fdf8f0;
+  font-size: 0.7rem; padding: 4px 10px;
+  border-radius: 6px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.tooltip:hover::after { opacity: 1; }
