@@ -9,11 +9,19 @@ export default defineConfig({
   ],
   server: {
     port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-      }
-    }
-  }
+    // Dev proxy: uncomment if you want /api calls forwarded to the local backend.
+    // In production (Vercel), the frontend uses VITE_API_URL env var instead.
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:8000',
+    //     changeOrigin: true,
+    //   }
+    // }
+  },
+  // Resolve alias so you can use '@/lib/api' imports
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 })

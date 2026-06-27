@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import datetime
+import os
 
 from . import models, schemas, database
 from .ai_agent import MockAIAgent
@@ -11,9 +12,20 @@ models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(title="DukaanAI API")
 
+# ─── CORS ─────────────────────────────────────────────────────────────────────
+# Read allowed origins from FRONTEND_URL env var.
+# Supports comma-separated values for multiple origins (e.g., Vercel preview URLs).
+# Example: FRONTEND_URL=https://vyaapar-mitra.vercel.app,https://vyaapar-mitra-*.vercel.app
+# Falls back to allowing all origins in development.
+_frontend_url = os.getenv("FRONTEND_URL", "")
+if _frontend_url:
+    _allowed_origins = [url.strip() for url in _frontend_url.split(",") if url.strip()]
+else:
+    _allowed_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

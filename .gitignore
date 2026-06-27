@@ -30,6 +30,9 @@ dukaanai.db
 .env.local
 .env.*.local
 backend/.env
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
 
 # ── Node / Frontend ───────────────────────────────────────────────────────────
 node_modules/
