@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 
 from . import models, schemas, database
-from .ai_agent import MockAIAgent
+from .ai_agent import get_ai_agent
 
 # Create DB tables
 models.Base.metadata.create_all(bind=database.engine)
@@ -31,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-ai_agent = MockAIAgent()
+ai_agent = get_ai_agent()
 
 @app.get("/")
 def read_root():

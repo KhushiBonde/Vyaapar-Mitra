@@ -1,6 +1,10 @@
 import json
+import os
+import logging
 from pydantic import BaseModel, Field
 from typing import Optional, List
+
+logger = logging.getLogger("dukaanai.ai_agent")
 
 # --- AI Prompt Design Choices & Comments ---
 #
@@ -114,3 +118,89 @@ class MockAIAgent:
             extracted_order=extracted_order,
             delivery_address=delivery_address
         )
+
+class RealAIAgent:
+    """
+    Real AI Agent using the OpenAI SDK.
+    Supports both OpenAI and Google Gemini (via OpenAI-compatible endpoint).
+    """
+    def __init__(self):
+        try:
+            from openai import AsyncOpenAI
+        except ImportError:
+            raise RuntimeError("openai SDK not installed. Run: pip install openai")
+        
+        self.gemini_mode = os.environ.get("GEMINI_MODE", "false").lower() == "true"
+        self.model = os.environ.get("AI_MODEL", "gemini-2.0-flash" if self.gemini_mode else "gpt-4o")
+        
+        if self.gemini_mode:
+            api_key = os.environ.get("OPENAI_API_KEY")
+            if not api_key:
+                raise RuntimeError("OPENAI_API_KEY must be set (using your Gemini key) when GEMINI_MODE=true.")
+            self.client = AsyncOpenAI(
+                api_key=api_key,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+        else:
+            api_key = os.environ.get("OPENAI_API_KEY")
+            if not api_key:
+                raise RuntimeError("OPENAI_API_KEY must be set for RealAIAgent.")
+            self.client = AsyncOpenAI(api_key=api_key)
+
+    async def process_message(
+        self, 
+        user_message: str, 
+        business_config: dict, 
+        conversation_history: list
+    ) -> AIResponseFormat:
+        
+        system_prompt = SYSTEM_PROMPT_TEMPLATE.format(
+            business_name=business_config.get("name", "Store"),
+            business_type=business_config.get("type", "retail"),
+            working_hours=business_config.get("working_hours", "10 AM to 8 PM"),
+            faqs=business_config.get("faqs", "No specific FAQs provided."),
+            tone=business_config.get("tone", "friendly")
+        )
+
+        schema_json = AIResponseFormat.model_json_schema()
+        
+        system_prompt += f"\n\nYou MUST return your response as a valid JSON object matching exactly this JSON schema:\n{json.dumps(schema_json)}"
+        
+        messages = [{"role": "system", "content": system_prompt}]
+        for msg in conversation_history:
+            # Assuming conversation_history is a list of dicts with 'sender_type' and 'content'
+            role = "assistant" if msg.get("sender_type") == "ai" else "user"
+            messages.append({"role": role, "content": msg.get("content", "")})
+        
+        messages.append({"role": "user", "content": user_message})
+
+        try:
+            response = await self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                response_format={"type": "json_object"}
+            )
+            raw_json = response.choices[0].message.content
+            parsed = json.loads(raw_json)
+            return AIResponseFormat(**parsed)
+        except Exception as e:
+            logger.error(f"AI API Error: {e}")
+            # Fallback response
+            return AIResponseFormat(
+                intent="general_question",
+                response_text="I'm sorry, I'm having trouble processing that right now. Let me pass this to the shop owner.",
+                needs_attention=True,
+                confidence=0.0,
+                extracted_order=None,
+                delivery_address=None
+            )
+
+def get_ai_agent():
+    mode = os.environ.get("AI_MODE", "mock").lower()
+    if mode == "real":
+        logger.info("Using RealAIAgent")
+        return RealAIAgent()
+    else:
+        logger.info("Using MockAIAgent")
+        return MockAIAgent()
+
