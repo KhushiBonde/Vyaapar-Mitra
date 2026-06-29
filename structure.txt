@@ -1,0 +1,72 @@
+VYAPAR MITRA - PROJECT FILE STRUCTURE
+========================================
+
+VyaparMitra/
+│
+├── frontend/                          # React + Vite frontend application
+│   ├── components/                    # Reusable UI components
+│   │   ├── Navbar.jsx
+│   │   ├── Sidebar.jsx
+│   │   ├── ChatBubble.jsx
+│   │   ├── OrderCard.jsx
+│   │   └── AnalyticsChart.jsx
+│   │
+│   ├── context/                       # React context providers (global state)
+│   │   ├── AuthContext.jsx
+│   │   └── BusinessContext.jsx
+│   │
+│   ├── layouts/                       # Page layout wrappers
+│   │   ├── DashboardLayout.jsx
+│   │   └── AuthLayout.jsx
+│   │
+│   ├── pages/                         # Application pages/routes
+│   │   ├── LandingPage.jsx            # Public landing page
+│   │   ├── Login.jsx                  # Authentication - Login
+│   │   ├── Signup.jsx                 # Authentication - Signup
+│   │   ├── Dashboard.jsx              # Main business dashboard
+│   │   └── Analytics.jsx              # Customer & sales analytics
+│   │
+│   ├── App.jsx                        # Root component / route definitions
+│   ├── main.jsx                       # React entry point
+│   ├── index.css                      # Tailwind CSS imports/global styles
+│   ├── vite.config.js                 # Vite configuration
+│   ├── package.json                   # Frontend dependencies
+│   └── .env                           # Frontend environment variables
+│
+└── backend/                           # FastAPI + Python backend application
+    ├── main.py                        # FastAPI app entry point, routes, webhooks
+    ├── database.py                    # Database connection & initialization
+    ├── models.py                      # SQLAlchemy ORM models (User, Order, Chat, etc.)
+    ├── schemas.py                     # Pydantic request/response schemas
+    ├── ai_agent.py                    # LLM logic: intent classification,
+    │                                  #   response generation, order extraction
+    ├── whatsapp.py                    # WhatsApp integration (Twilio / Meta / Mock)
+    ├── auth.py                        # JWT authentication & user verification
+    ├── requirements.txt                # Backend Python dependencies
+    ├── .env                           # Backend environment variables (API keys, DB URL)
+    └── vyaparmitra.db                  # SQLite database file (development)
+
+
+NOTES ON KEY FILES
+---------------------
+- ai_agent.py    : Core AI module — handles language detection (Hindi/
+                    Hinglish/English), intent classification, GPT-4o /
+                    Claude response generation, structured order
+                    extraction (JSON), and confidence-based escalation.
+
+- whatsapp.py    : Handles incoming/outgoing WhatsApp messages via
+                    Twilio API, Meta Cloud API, or the Mock Provider
+                    used for local testing.
+
+- main.py        : Defines all REST API endpoints and webhook routes
+                    (e.g. /webhook/twilio, /webhook/meta, /api/orders,
+                    /api/analytics).
+
+- models.py      : Defines database tables — Business, Customer,
+                    Conversation, Order, OrderItem, Notification.
+
+- Dashboard.jsx  : Main UI for business owners — view chats, orders,
+                    and pending human-escalation alerts.
+
+- Analytics.jsx  : Visual insights using Recharts — order trends,
+                    customer engagement, response stats.

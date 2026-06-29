@@ -1,0 +1,130 @@
+VYAPAR MITRA - HOW TO RUN THE PROJECT
+=======================================
+AI-Powered WhatsApp Automation for Small Businesses in India
+
+
+1. PREREQUISITES
+-----------------
+- Node.js (v18 or higher) and npm
+- Python 3.10+
+- pip (Python package manager)
+- Git
+- OpenAI API key (for GPT-4o) and/or Anthropic API key (for Claude)
+- Twilio account OR Meta WhatsApp Cloud API credentials
+  (Mock WhatsApp Provider can be used for local testing without real API keys)
+
+
+2. CLONE THE PROJECT
+---------------------
+git clone <repository-url>
+cd VyaparMitra
+
+
+3. BACKEND SETUP (FastAPI + Python)
+-------------------------------------
+Step 1: Move into the backend folder
+    cd backend
+
+Step 2: Create a virtual environment
+    python -m venv venv
+
+Step 3: Activate the virtual environment
+    Windows:   venv\Scripts\activate
+    Mac/Linux: source venv/bin/activate
+
+Step 4: Install dependencies
+    pip install -r requirements.txt
+
+Step 5: Create a .env file inside backend/ with the following keys:
+    OPENAI_API_KEY=your_openai_key
+    ANTHROPIC_API_KEY=your_anthropic_key
+    DATABASE_URL=sqlite:///./vyaparmitra.db
+    TWILIO_ACCOUNT_SID=your_twilio_sid
+    TWILIO_AUTH_TOKEN=your_twilio_auth_token
+    WHATSAPP_PROVIDER=mock        (use "twilio" or "meta" for real integration)
+    JWT_SECRET_KEY=your_secret_key
+
+Step 6: Initialize the database
+    python database.py
+
+Step 7: Run the FastAPI server
+    uvicorn main:app --reload --port 8000
+
+Backend will be available at:
+    http://localhost:8000
+
+API docs (Swagger UI) available at:
+    http://localhost:8000/docs
+
+
+4. FRONTEND SETUP (React + Vite)
+-----------------------------------
+Step 1: Open a new terminal and move into the frontend folder
+    cd frontend
+
+Step 2: Install dependencies
+    npm install
+
+Step 3: Create a .env file inside frontend/ with:
+    VITE_API_BASE_URL=http://localhost:8000
+
+Step 4: Run the development server
+    npm run dev
+
+Frontend will be available at:
+    http://localhost:5173
+
+
+5. CONNECTING WHATSAPP (OPTIONAL FOR REAL TESTING)
+-----------------------------------------------------
+Option A - Twilio:
+    1. Create a Twilio account and enable WhatsApp Sandbox.
+    2. Set the webhook URL to: http://<your-domain>/webhook/twilio
+    3. Add Twilio SID and Auth Token in backend/.env
+
+Option B - Meta WhatsApp Cloud API:
+    1. Create a Meta Developer account and a WhatsApp Business app.
+    2. Set the webhook URL to: http://<your-domain>/webhook/meta
+    3. Add the Meta access token and phone number ID in backend/.env
+
+Option C - Mock Provider (No real WhatsApp account needed):
+    Set WHATSAPP_PROVIDER=mock in backend/.env
+    Test messages can be sent directly via the /docs Swagger UI
+    or via the dashboard's built-in chat simulator (if available).
+
+Note: For local webhook testing with Twilio/Meta, expose your backend
+using a tunneling tool such as ngrok:
+    ngrok http 8000
+
+
+6. RUNNING THE FULL APPLICATION
+----------------------------------
+1. Start the backend:   uvicorn main:app --reload --port 8000
+2. Start the frontend:  npm run dev
+3. Open browser at:     http://localhost:5173
+4. Login / Sign up as a business owner.
+5. Send a test WhatsApp message (real or via mock provider).
+6. View AI responses, extracted orders, and analytics on the dashboard.
+
+
+7. COMMON ISSUES & FIXES
+---------------------------
+- "Module not found" error (backend): Re-run pip install -r requirements.txt
+  inside the activated virtual environment.
+- "CORS error" in browser: Confirm VITE_API_BASE_URL in frontend/.env matches
+  the backend URL, and CORS middleware is enabled in main.py.
+- "Invalid API key" error: Double-check OPENAI_API_KEY / ANTHROPIC_API_KEY
+  values in backend/.env (no quotes, no trailing spaces).
+- WhatsApp webhook not triggering: Ensure ngrok (or your public URL) is
+  running and matches the webhook URL configured in Twilio/Meta dashboard.
+- Database errors: Delete the existing .db file and re-run
+  python database.py to recreate tables.
+
+
+8. TECH STACK SUMMARY
+-------------------------
+Frontend : React 19, Vite, Tailwind CSS v4, React Router v7, Recharts
+Backend  : Python 3.10+, FastAPI, SQLAlchemy 2.0, Pydantic, JWT Auth
+Database : SQLite (development) / PostgreSQL (production)
+AI       : OpenAI GPT-4o, Anthropic Claude, NLP, Function Calling
+Messaging: Twilio WhatsApp API, Meta WhatsApp Cloud API, Mock Provider
